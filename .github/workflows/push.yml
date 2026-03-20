@@ -1,11 +1,9 @@
 name: Push to Replicate
 
 on:
-  workflow_dispatch:
-    inputs:
-      model_name:
-        description: 'papina/seedvr2'
-        required: true
+  push:
+    branches:
+      - main
 
 jobs:
   push_to_replicate:
@@ -27,4 +25,4 @@ jobs:
           token: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
 
       - name: Push to Replicate
-        run: cog push r8.im/${{ inputs.model_name }}
+        run: cog push r8.im/${{ inputs.model_name || vars.DEFAULT_MODEL_NAME }}
