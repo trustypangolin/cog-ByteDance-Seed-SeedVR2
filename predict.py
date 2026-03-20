@@ -49,6 +49,9 @@ os.environ.setdefault("HF_DATASETS_CACHE", str(MODEL_CACHE))
 os.environ.setdefault("HUGGINGFACE_HUB_CACHE", str(MODEL_CACHE))
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
+# HuggingFace token for private models
+HF_TOKEN = os.environ.get("HF_TOKEN", None)
+
 MODEL_CACHE.mkdir(parents=True, exist_ok=True)
 
 SHARED_WEIGHT_FILES = {
@@ -66,7 +69,6 @@ class ModelSpec:
 
 
 MODEL_VARIANTS: Dict[str, ModelSpec] = {
-    "3b": ModelSpec(weight="seedvr2_ema_3b.pth", config="configs_3b/main.yaml"),
     "7b": ModelSpec(weight="seedvr2_ema_7b.pth", config="configs_7b/main.yaml"),
 }
 DEFAULT_MODEL_VARIANT = "7b"
@@ -100,11 +102,58 @@ def download_weights(url: str, dest: Path) -> None:
     print("[+] Download completed in:", time.time() - start, "seconds")
 
 
+def download_from_huggingface(repo_id: str, filename: str, dest: Path, token: Optional[str] = None) -> None:
+    """Download a file from HuggingFace Hub.
+    
+    Args:
+        repo_id: HuggingFace repository ID (e.g., "ByteDance-Seed/SeedVR2-7B")
+        filename: Name of the file to download
+        dest: Destination path for the downloaded file
+        token: Optional HuggingFace token for private repos
+    """
+    try:
+        from huggingface_hub import hf_hub_download
+    except ImportError:
+        raise ImportError("huggingface_hub is required for HuggingFace downloads. Install with: pip install huggingface_hub")
+    
+    start = time.time()
+    print(f"[!] Downloading {filename} from HuggingFace Hub: {repo_id}")
+    print(f"[~] Destination path: {dest}")
+    
+    try:
+        downloaded_path = hf_hub_download(
+            repo_id=repo_id,
+            filename=filename,
+            token=token,
+            cache_dir=str(MODEL_CACHE),
+        )
+        # Move from cache to desired location
+        import shutil
+        shutil.move(downloaded_path, str(dest))
+    except Exception as e:
+        print(f"[ERROR] Failed to download from HuggingFace: {e}")
+        raise
+    
+    print(f"[+] Download completed in: {time.time() - start} seconds")
+
+
 def ensure_weight(filename: str) -> Path:
     path = CKPT_DIR / filename
-    if not path.exists():
-        raise FileNotFoundError(f"Expected weight {path} missing. Did the CDN download succeed?")
-    return path
+    if path.exists():
+        return path
+    
+    # If weight doesn't exist, try to download from HuggingFace
+    if filename == "seedvr2_ema_7b.pth":
+        print(f"[!] Weight not found, downloading from HuggingFace...")
+        download_from_huggingface(
+            repo_id="ByteDance-Seed/SeedVR2-7B",
+            filename="seedvr2_ema_7b.pth",
+            dest=path,
+            token=HF_TOKEN,
+        )
+        return path
+    
+    raise FileNotFoundError(f"Expected weight {path} missing. Did the CDN download succeed?")
 
 
 def cut_videos(video: torch.Tensor, sp_size: int) -> torch.Tensor:
@@ -321,7 +370,7 @@ class Predictor(BasePredictor):
         output_format: str = Input(
             description="Image output format (only used for image inputs).",
             choices=["png", "webp", "jpg"],
-            default="webp",
+            default="png",
         ),
         output_quality: int = Input(
             description="Image quality for lossy formats (jpg/webp).",
@@ -355,7 +404,7 @@ class Predictor(BasePredictor):
                 "both dimensions are scaled down proportionally.\n"
                 "Useful to prevent excessive VRAM usage on extreme aspect ratios."
             ),
-            default=0,
+            default=3840,
             ge=0,
             le=16384,
         ),

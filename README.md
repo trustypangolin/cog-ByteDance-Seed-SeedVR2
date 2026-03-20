@@ -32,7 +32,7 @@ Replicate or locally with the same configuration.
 
 ## Try the model
 
-- **In the browser:** open [replicate.com/zsxkib/seedvr2](https://replicate.com/zsxkib/seedvr2)
+- **In the browser:** open [replicate.com/papina/seedvr2](https://replicate.com/papina/seedvr2)
 - **From the CLI:** install Cog and run:
 
   ```bash
@@ -99,8 +99,8 @@ from the Replicate CDN into `model_cache/`. Subsequent runs reuse those files.
 
 ## Development notes
 
-- The predictor removes the need for Hugging Face downloads by mirroring the
-  release assets at `https://weights.replicate.delivery/default/seedvr2/`.
+<!-- - The predictor removes the need for Hugging Face downloads by mirroring the
+  release assets at `https://weights.replicate.delivery/default/seedvr2/`. -->
 - `mux_audio_stream` keeps audio in sync by copying the source stream onto the
   generated video without re-encoding.
 - CUDA 12.4 + PyTorch 2.4.0 matches Replicate's `cuda12.4-python3.10-torch2.4.0`
@@ -108,10 +108,10 @@ from the Replicate CDN into `model_cache/`. Subsequent runs reuse those files.
 
 ## Deploy to Replicate
 
-Create or update a Replicate model pointing at `r8.im/zsxkib/seedvr2`, then:
+Create or update a Replicate model pointing at `r8.im/papina/seedvr2`, then:
 
 ```bash
-cog push r8.im/zsxkib/seedvr2
+cog push r8.im/papina/seedvr2
 ```
 
 The push builds the Docker image, validates the schema, and publishes the artifacts.
@@ -126,13 +126,6 @@ Please reference the original SeedVR/SeedVR2 work if you build on these models:
   author  = {Wang, Jianyi and Lin, Shanchuan and Lin, Zhijie and Ren, Yuxi and Wei, Meng and Yue, Zongsheng and Zhou, Shangchen and Chen, Hao and Zhao, Yang and Yang, Ceyuan and Xiao, Xuefeng and Loy, Chen Change and Jiang, Lu},
   journal = {arXiv preprint arXiv:2506.05301},
   year    = {2025}
-}
-
-@inproceedings{wang2025seedvr,
-  title     = {SeedVR: Seeding Infinity in Diffusion Transformer Towards Generic Video Restoration},
-  author    = {Wang, Jianyi and Lin, Zhijie and Wei, Meng and Zhao, Yang and Yang, Ceyuan and Loy, Chen Change and Jiang, Lu},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  year      = {2025}
 }
 ```
 ## License
