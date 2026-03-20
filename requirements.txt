@@ -1,6 +1,6 @@
 # Core Inference Dependencies
 einops==0.7.0                   # Tensor operations
-torch==2.9.0
+torch==2.7.1
 omegaconf==2.3.0                # Configuration system.
 diffusers==0.29.1               # Diffusers
 rotary-embedding-torch==0.8.9   # Rotary positional embedding
