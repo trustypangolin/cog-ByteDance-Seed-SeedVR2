@@ -4,6 +4,6 @@ torch==2.7.1
 omegaconf==2.3.0                # Configuration system.
 diffusers==0.29.1               # Diffusers
 rotary-embedding-torch==0.8.9   # Rotary positional embedding
-torchvision==0.24.0
+torchvision==0.22.0
 mediapy==1.2.0                  # Notebook Visualization
 huggingface_hub>=0.20.0        # HuggingFace Hub for model downloads
