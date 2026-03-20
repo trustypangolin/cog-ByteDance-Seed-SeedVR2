@@ -2,7 +2,7 @@
 einops==0.7.0                   # Tensor operations
 
 # Training
-torch==2.4.0
+torch==2.7.1
 omegaconf==2.3.0                # Configuration system.
 lpips==0.1.4                    # LPIPS model for VAE training
 
@@ -16,7 +16,7 @@ sentencepiece==0.2.0            # For Text Encoder
 diffusers==0.29.1               # Diffusers
 rotary-embedding-torch==0.8.9   # Rotary positional embedding
 transformers==4.38.2            # Transformers
-torchvision==0.19.0
+torchvision==0.22.0
 tiktoken==0.7.0                 # Tiktoken for generation
 transformers_stream_generator==0.0.5 #LLM generation support
 pydantic<2.12.0                 # Pin due to helper libs expecting 2.11 API
