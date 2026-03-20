@@ -363,9 +363,9 @@ class Predictor(BasePredictor):
             ge=1,
             le=120,
         ),
-        seed: Optional[int] = Input(
-            description="Random seed. Leave blank for a random seed each call.",
-            default=None,
+        seed: int = Input(
+            description="Random seed. Use -1 for random seed each call.",
+            default=-1,
         ),
         output_format: str = Input(
             description="Image output format (only used for image inputs).",
@@ -420,7 +420,7 @@ class Predictor(BasePredictor):
         sp_size_val = int(sp_size)
         resolution_val = int(resolution)
         max_resolution_val = int(max_resolution)
-        seed_val = int(seed if seed is not None else torch.randint(0, 2**32, ()).item())
+        seed_val = int(seed if seed != -1 else torch.randint(0, 2**32, ()).item())
         if sp_size_val != 1:
             print(
                 "[WARN] sp_size>1 requested on single-GPU build; proceeding with padding-only heuristic."
