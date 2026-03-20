@@ -1,6 +1,6 @@
 # SeedVR2 Cog (3B & 7B)
 
-[![Replicate](https://replicate.com/zsxkib/seedvr2/badge)](https://replicate.com/zsxkib/seedvr2)
+[![Replicate](https://replicate.com/papina/seedvr2/badge)](https://replicate.com/papina/seedvr2)
 
 # Overview
 
