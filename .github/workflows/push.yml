@@ -24,5 +24,9 @@ jobs:
         with:
           token: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
 
+      - name: cog login
+        run: |
+          echo ${{ secrets.COG_TOKEN }} | cog login --token-stdin
+          
       - name: Push to Replicate
         run: cog push r8.im/${{ inputs.model_name || vars.DEFAULT_MODEL_NAME }}
