@@ -18,7 +18,7 @@ import mediapy
 import torch
 import torch.distributed as dist
 import torchvision.transforms as T
-from cog import BasePredictor, Input, Path as CogPath
+from cog import BaseRunner, Input, Path
 from einops import rearrange
 from omegaconf import OmegaConf
 from PIL import Image
@@ -276,7 +276,7 @@ class LazyRunnerManager:
         bundle["device"] = "cpu"
 
 
-class Predictor(BasePredictor):
+class Runner(BaseRunner):
     def setup(self) -> None:
         os.environ.setdefault("MASTER_ADDR", "127.0.0.1")
         os.environ.setdefault("MASTER_PORT", "29500")
@@ -334,9 +334,9 @@ class Predictor(BasePredictor):
             ]
         )
 
-    def predict(
+    def run(
         self,
-        media: CogPath = Input(
+        media: Path = Input(
             description="Video (mp4/mov) or image (png/jpg/webp) to restore.",
         ),
         cfg_scale: float = Input(
@@ -408,7 +408,7 @@ class Predictor(BasePredictor):
             ge=0,
             le=16384,
         ),
-    ) -> CogPath:
+    ) -> Path:
         input_path, cleanup = self._resolve_media_path(media)
         media_kind = self._detect_media_kind(input_path)
         if media_kind not in {"image", "video"}:
@@ -567,7 +567,7 @@ class Predictor(BasePredictor):
         torch.cuda.empty_cache()
         if cleanup:
             input_path.unlink(missing_ok=True)
-        return CogPath(str(output_name))
+        return Path(str(output_name))
 
     def _build_runner(self, variant: str) -> Tuple["VideoDiffusionInfer", OmegaConf]:
         spec = MODEL_VARIANTS.get(variant)
