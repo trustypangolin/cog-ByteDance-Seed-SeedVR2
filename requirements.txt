@@ -1,9 +1,18 @@
-# Core Inference Dependencies
+# Common
 einops==0.7.0                   # Tensor operations
+
+# Training
 torch==2.7.0
 omegaconf==2.3.0                # Configuration system.
+
+# Dataloading
+opencv-python==4.9.0.80         # OpenCV
+
+# Modeling
 diffusers==0.29.1               # Diffusers
 rotary-embedding-torch==0.8.9   # Rotary positional embedding
 torchvision==0.22.0
+
+# Notebook
 mediapy==1.2.0                  # Notebook Visualization
 huggingface_hub>=0.20.0        # HuggingFace Hub for model downloads
